@@ -1,5 +1,18 @@
 [
  {
+  "autoFlags": [
+   {
+    "kind": "colour",
+    "box": {
+     "x": 140,
+     "y": 108,
+     "w": 200,
+     "h": 64
+    },
+    "message": "Off-palette colour: #a855f7 (7280 px) is not used anywhere in the approved design."
+   }
+  ],
+  "falsePositiveFlags": [],
   "id": "button-primary",
   "sim": 0.9771,
   "diffPct": 5.45,
@@ -13,11 +26,31 @@
   "keyed": [
    {
     "defect": "token",
+    "note": "Fill uses #a855f7 instead of accent #5b8cff",
+    "box": {
+     "x": 150,
+     "y": 118,
+     "w": 180,
+     "h": 44
+    },
     "caught": true
    }
   ]
  },
  {
+  "autoFlags": [
+   {
+    "kind": "state",
+    "box": {
+     "x": 252,
+     "y": 108,
+     "w": 152,
+     "h": 64
+    },
+    "message": "Looks like a different state: #1f2532 became #5b8cff, a colour used elsewhere in the approved design."
+   }
+  ],
+  "falsePositiveFlags": [],
   "id": "button-disabled",
   "sim": 0.9969,
   "diffPct": 4.26,
@@ -31,11 +64,31 @@
   "keyed": [
    {
     "defect": "missing_state",
+    "note": "Disabled button rendered as active primary",
+    "box": {
+     "x": 260,
+     "y": 118,
+     "w": 140,
+     "h": 44
+    },
     "caught": true
    }
   ]
  },
  {
+  "autoFlags": [
+   {
+    "kind": "layout",
+    "box": {
+     "x": 36,
+     "y": 92,
+     "w": 184,
+     "h": 80
+    },
+    "message": "Position or size changed: edges moved by up to 24px."
+   }
+  ],
+  "falsePositiveFlags": [],
   "id": "input-text",
   "sim": 0.9976,
   "diffPct": 0.5,
@@ -49,11 +102,31 @@
   "keyed": [
    {
     "defect": "spacing",
+    "note": "Label overlapping field; uneven horizontal padding",
+    "box": {
+     "x": 40,
+     "y": 97,
+     "w": 380,
+     "h": 69
+    },
     "caught": true
    }
   ]
  },
  {
+  "autoFlags": [
+   {
+    "kind": "colour",
+    "box": {
+     "x": 292,
+     "y": 108,
+     "w": 72,
+     "h": 40
+    },
+    "message": "Off-palette colour: #22c55e (1016 px) is not used anywhere in the approved design."
+   }
+  ],
+  "falsePositiveFlags": [],
   "id": "toggle-switch",
   "sim": 0.9842,
   "diffPct": 0.76,
@@ -67,19 +140,48 @@
   "keyed": [
    {
     "defect": "token",
+    "note": "ON track uses #22c55e instead of accent #5b8cff",
+    "box": {
+     "x": 300,
+     "y": 112,
+     "w": 56,
+     "h": 32
+    },
     "caught": true
    }
   ]
  },
  {
+  "autoFlags": [
+   {
+    "kind": "layout",
+    "box": {
+     "x": 44,
+     "y": 92,
+     "w": 144,
+     "h": 80
+    },
+    "message": "Position or size changed: edges moved by up to 26px."
+   },
+   {
+    "kind": "layout",
+    "message": "Element moved: matching content disappeared here and appeared at a new position.",
+    "box": {
+     "x": 68,
+     "y": 188,
+     "w": 296,
+     "h": 40
+    }
+   }
+  ],
+  "falsePositiveFlags": [],
   "id": "card-stats",
   "sim": 0.9972,
   "diffPct": 2.11,
   "pass": false,
   "flags": [
    "Position or size changed: edges moved by up to 26px.",
-   "Element missing: approved design has content here (1400 px), agent version is mostly empty.",
-   "Extra element: agent added content the approved design does not have."
+   "Element moved: matching content disappeared here and appeared at a new position."
   ],
   "answerKey": [
    "spacing"
@@ -87,11 +189,41 @@
   "keyed": [
    {
     "defect": "spacing",
+    "note": "Value too close to caption; trend badge bottom-right drift",
+    "box": {
+     "x": 48,
+     "y": 95,
+     "w": 324,
+     "h": 129
+    },
     "caught": true
    }
   ]
  },
  {
+  "autoFlags": [
+   {
+    "kind": "colour",
+    "box": {
+     "x": 116,
+     "y": 164,
+     "w": 288,
+     "h": 48
+    },
+    "message": "Off-palette colour: #f97316 (3192 px) is not used anywhere in the approved design."
+   },
+   {
+    "kind": "layout",
+    "box": {
+     "x": 116,
+     "y": 164,
+     "w": 288,
+     "h": 48
+    },
+    "message": "Position or size changed: edges moved by up to 40px."
+   }
+  ],
+  "falsePositiveFlags": [],
   "id": "modal-confirm",
   "sim": 0.9859,
   "diffPct": 5.14,
@@ -107,15 +239,62 @@
   "keyed": [
    {
     "defect": "spacing",
+    "note": "Cancel/Delete action gap widened",
+    "box": {
+     "x": 120,
+     "y": 168,
+     "w": 280,
+     "h": 36
+    },
     "caught": true
    },
    {
     "defect": "token",
+    "note": "Delete uses #f97316 instead of danger #e5484d",
+    "box": {
+     "x": 276,
+     "y": 168,
+     "w": 124,
+     "h": 36
+    },
     "caught": true
    }
   ]
  },
  {
+  "autoFlags": [
+   {
+    "kind": "colour",
+    "box": {
+     "x": 92,
+     "y": 124,
+     "w": 64,
+     "h": 24
+    },
+    "message": "Off-palette colour: #1c253b (1190 px) is not used anywhere in the approved design."
+   },
+   {
+    "kind": "colour",
+    "box": {
+     "x": 204,
+     "y": 124,
+     "w": 72,
+     "h": 24
+    },
+    "message": "Off-palette colour: #1c253b (1362 px) is not used anywhere in the approved design."
+   },
+   {
+    "kind": "colour",
+    "box": {
+     "x": 332,
+     "y": 124,
+     "w": 48,
+     "h": 24
+    },
+    "message": "Off-palette colour: #1c253b (969 px) is not used anywhere in the approved design."
+   }
+  ],
+  "falsePositiveFlags": [],
   "id": "badge-status",
   "sim": 0.9806,
   "diffPct": 0.25,
@@ -131,11 +310,102 @@
   "keyed": [
    {
     "defect": "token",
+    "note": "Semantic colors collapsed to accent #5b8cff",
+    "box": {
+     "x": 80,
+     "y": 120,
+     "w": 320,
+     "h": 32
+    },
     "caught": true
    }
   ]
  },
  {
+  "autoFlags": [
+   {
+    "kind": "state",
+    "box": {
+     "x": 60,
+     "y": 116,
+     "w": 104,
+     "h": 40
+    },
+    "message": "Looks like a different state: #5b8cff became #181c26, a colour used elsewhere in the approved design."
+   },
+   {
+    "kind": "layout",
+    "box": {
+     "x": 180,
+     "y": 116,
+     "w": 88,
+     "h": 24
+    },
+    "message": "Position or size changed: edges moved by up to 10px."
+   },
+   {
+    "kind": "layout",
+    "box": {
+     "x": 300,
+     "y": 116,
+     "w": 104,
+     "h": 24
+    },
+    "message": "Position or size changed: edges moved by up to 30px."
+   },
+   {
+    "kind": "extra",
+    "box": {
+     "x": 172,
+     "y": 156,
+     "w": 96,
+     "h": 16
+    },
+    "message": "Extra element: agent added content the approved design does not have."
+   }
+  ],
+  "falsePositiveFlags": [
+   {
+    "kind": "state",
+    "box": {
+     "x": 60,
+     "y": 116,
+     "w": 104,
+     "h": 40
+    },
+    "message": "Looks like a different state: #5b8cff became #181c26, a colour used elsewhere in the approved design."
+   },
+   {
+    "kind": "layout",
+    "box": {
+     "x": 180,
+     "y": 116,
+     "w": 88,
+     "h": 24
+    },
+    "message": "Position or size changed: edges moved by up to 10px."
+   },
+   {
+    "kind": "layout",
+    "box": {
+     "x": 300,
+     "y": 116,
+     "w": 104,
+     "h": 24
+    },
+    "message": "Position or size changed: edges moved by up to 30px."
+   },
+   {
+    "kind": "extra",
+    "box": {
+     "x": 172,
+     "y": 156,
+     "w": 96,
+     "h": 16
+    },
+    "message": "Extra element: agent added content the approved design does not have."
+   }
+  ],
   "id": "tabs-underline",
   "sim": 0.9977,
   "diffPct": 0.98,
@@ -152,11 +422,41 @@
   "keyed": [
    {
     "defect": "spacing",
-    "caught": true
+    "note": "Active underline sits under wrong tab / below baseline",
+    "box": {
+     "x": 72,
+     "y": 144,
+     "w": 192,
+     "h": 19
+    },
+    "caught": false
    }
   ]
  },
  {
+  "autoFlags": [
+   {
+    "kind": "missing",
+    "box": {
+     "x": 124,
+     "y": 76,
+     "w": 232,
+     "h": 176
+    },
+    "message": "Element missing: a #5b8cff area (3452 px) in the approved design is gone in the agent version."
+   },
+   {
+    "kind": "layout",
+    "box": {
+     "x": 124,
+     "y": 76,
+     "w": 232,
+     "h": 176
+    },
+    "message": "Position or size changed: edges moved by up to 19px."
+   }
+  ],
+  "falsePositiveFlags": [],
   "id": "empty-state",
   "sim": 0.9888,
   "diffPct": 3.32,
@@ -172,15 +472,31 @@
   "keyed": [
    {
     "defect": "missing_state",
+    "note": "Missing primary Create CTA",
+    "box": {
+     "x": 180,
+     "y": 210,
+     "w": 120,
+     "h": 32
+    },
     "caught": true
    },
    {
     "defect": "spacing",
+    "note": "Helper text drifted down",
+    "box": {
+     "x": 120,
+     "y": 182,
+     "w": 240,
+     "h": 38
+    },
     "caught": true
    }
   ]
  },
  {
+  "autoFlags": [],
+  "falsePositiveFlags": [],
   "id": "progress-bar",
   "sim": 1,
   "diffPct": 0,

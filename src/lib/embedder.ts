@@ -6,7 +6,7 @@ import {
   type PreTrainedModel,
   type Processor,
   type ProgressCallback,
-  type RawImage,
+  RawImage,
   type Tensor,
 } from '@huggingface/transformers';
 import { loadImageForEmbedding } from './image';
@@ -15,7 +15,9 @@ import { GpuFailedError } from './errors';
 export { detectWebGPU };
 
 /** EmbeddingGemma 2 ONNX (multimodal: text + image; audio skipped). */
-export const MODEL_ID = 'onnx-community/embeddinggemma-2-ONNX';
+import { MODEL_ID } from './model';
+import { cosineSimilarity } from './similarity';
+export { cosineSimilarity };
 
 export type DeviceInfo = {
   device: 'webgpu' | 'wasm';
@@ -110,8 +112,8 @@ function reset() {
 export async function loadEmbedder(
   onProgress?: (p: EmbedderProgress) => void,
 ): Promise<DeviceInfo> {
-  if (deviceInfo && model && processor) return deviceInfo;
   if (loadPromise) return loadPromise;
+  if (deviceInfo && model && processor) return deviceInfo;
 
   loadPromise = (async () => {
     const forceWasm = sessionStorage.getItem(FORCE_WASM_KEY) === '1';
@@ -119,7 +121,9 @@ export async function loadEmbedder(
     if (gpu) {
       try {
         if (SIMULATE_GPU_FAIL) throw new Error('simulated GPU failure');
-        return await loadWith('webgpu', 'q4f16', onProgress);
+        const info = await loadWith('webgpu', 'q4f16', onProgress);
+        await embeddingFromInputs(null, new RawImage(new Uint8ClampedArray([0, 0, 0, 255]), 1, 1, 4));
+        return info;
       } catch (err) {
         console.warn('[embedder] WebGPU load failed', err);
         // ONNX Runtime Web can't swap its WASM binary once initialised, so the
@@ -169,21 +173,5 @@ export async function embedImageUrl(url: string): Promise<Float32Array> {
 export async function embedImageBlob(blob: Blob): Promise<Float32Array> {
   if (!blob || blob.size === 0) throw new Error('empty-image');
   return embeddingFromInputs(null, await loadImageForEmbedding(blob));
-}
-
-export function cosineSimilarity(a: ArrayLike<number>, b: ArrayLike<number>): number {
-  const n = Math.min(a.length, b.length);
-  let dot = 0;
-  let na = 0;
-  let nb = 0;
-  for (let i = 0; i < n; i++) {
-    const x = a[i]!;
-    const y = b[i]!;
-    dot += x * y;
-    na += x * x;
-    nb += y * y;
-  }
-  const denom = Math.sqrt(na) * Math.sqrt(nb);
-  return denom === 0 ? 0 : dot / denom;
 }
 

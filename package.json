@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run"
   },
   "dependencies": {
     "@huggingface/transformers": "^4.3.1",
@@ -22,9 +23,10 @@
     "@vitejs/plugin-react": "^6.1.1",
     "oxlint": "^1.81.0",
     "typescript": "~6.0.2",
-    "vite": "^8.3.0"
+    "vite": "^8.3.0",
+    "vitest": "^3.2.7"
   },
-  "description": "Browser-based agent UI eval harness — golden vs agent renders with EmbeddingGemma cosine similarity and lint flags",
+  "description": "Browser-based agent UI eval harness \u2014 golden vs agent renders with EmbeddingGemma cosine similarity and lint flags",
   "license": "Apache-2.0",
   "author": "Sai Prakash",
   "engines": {

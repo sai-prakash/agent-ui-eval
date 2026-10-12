@@ -5,7 +5,8 @@ import sharp from 'sharp';
 import fs from 'node:fs';
 import path from 'node:path';
 
-export const MODEL_ID = 'onnx-community/embeddinggemma-2-ONNX';
+import { MODEL_ID } from '../src/lib/model.ts';
+export { MODEL_ID };
 export const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 
 let proc, model;
@@ -42,15 +43,4 @@ export function write(rel, obj) {
   fs.writeFileSync(p, JSON.stringify(obj));
   console.log('wrote', rel, (fs.statSync(p).size / 1024).toFixed(0) + 'KB');
 }
-// Load a TS data module's exported arrays without a TS toolchain.
-export async function importTs(rel) {
-  const src = fs.readFileSync(path.join(ROOT, rel), 'utf8')
-    .replace(/^import type .*$/gm, '')
-    .replace(/export type [\s\S]*?\n};\n/g, '')
-    .replace(/: [A-Za-z]+\[\]( =)/g, '$1')
-    .replace(/\(([a-z]+): [A-Za-z]+\)(: string)?/g, '($1)')
-    .replace(/\(([a-z]+): string\)(: string)?/g, '($1)');
-  const tmp = path.join(ROOT, 'scripts', '.tmp-' + path.basename(rel, '.ts') + '.mjs');
-  fs.writeFileSync(tmp, src);
-  try { return await import(tmp + '?' + Date.now()); } finally { fs.unlinkSync(tmp); }
-}
+export async function importTs(rel) { return import(path.join(ROOT, rel)); }

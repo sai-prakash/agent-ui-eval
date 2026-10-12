@@ -11,6 +11,7 @@ export type VisualReport = {
   diffPct: number;
   diff: Uint8ClampedArray;
   flags: AutoFlag[];
+  resizeNote?: string;
 };
 export type Img = { data: Uint8ClampedArray; width: number; height: number };
 
@@ -86,13 +87,16 @@ function regions(diff: Uint8ClampedArray, w: number, h: number): Box[] {
 
 export function compareImages(golden: Img, agent: Img): VisualReport {
   const { width: w, height: h } = golden;
-  if (agent.width !== w || agent.height !== h) throw new Error('size-mismatch');
+  const resizeNote = agent.width !== w || agent.height !== h
+    ? `Agent image scaled from ${agent.width}×${agent.height} to approved size ${w}×${h}.` : undefined;
+  if (resizeNote) agent = resizeImage(agent, w, h);
   const diff = new Uint8ClampedArray(w * h * 4);
   const diffPixels = pixelmatch(golden.data, agent.data, diff, w, h, { threshold: 0.1, includeAA: false, alpha: 0.15 });
 
   const gAll = sorted(colourCounts(golden));
-  // Background = the two most common colours of the approved render (page + card surface).
-  const bg = new Set(gAll.slice(0, 2).map(([k]) => k));
+  // Preserve the page + surface background heuristic. In a two-colour image,
+  // the second colour is the sole foreground, so keep only the dominant one.
+  const bg = new Set(gAll.slice(0, gAll.length > 2 ? 2 : 1).map(([k]) => k));
   // Approved palette = every colour that fills a real area of the approved design.
   const palette = new Set(gAll.filter(([, n]) => n >= 40).map(([k]) => k));
 
@@ -136,14 +140,13 @@ export function compareImages(golden: Img, agent: Img): VisualReport {
         flags.push({ kind: 'state', box, message: `Looks like a different state: ${gTop[0]} became ${aTop[0]}, a colour used elsewhere in the approved design.` });
     }
   }
-  return { width: w, height: h, diffPixels, diffPct: diffPixels / (w * h), diff, flags };
+  return { width: w, height: h, diffPixels, diffPct: diffPixels / (w * h), diff, flags: mergeMovedFlags(flags, golden, agent, bg), resizeNote };
 }
 
-/** Verdict from all three signals. */
-export const SIM_THRESHOLD = 0.92;
+/** Similarity is secondary information and never changes the verdict. */
 export const DIFF_THRESHOLD = 0.002; // 0.2% of pixels
-export function verdict(sim: number | null, v: VisualReport): boolean {
-  return (sim === null || sim >= SIM_THRESHOLD) && v.diffPct <= DIFF_THRESHOLD && v.flags.length === 0;
+export function verdict(_sim: number | null, v: VisualReport): boolean {
+  return v.diffPct <= DIFF_THRESHOLD && v.flags.length === 0;
 }
 
 /** Which answer-key categories an automated flag counts toward. */
@@ -152,5 +155,46 @@ export const KIND_TO_KEY: Record<AutoKind, string[]> = {
   state: ['missing_state', 'token'],
   layout: ['spacing'],
   missing: ['missing_state'],
-  extra: ['missing_state', 'spacing'],
+  extra: [],
 };
+
+/** Nearest-neighbour scaling keeps pixel analysis deterministic in browser and Node. */
+export function resizeImage(img: Img, width: number, height: number): Img {
+  if (width <= 0 || height <= 0 || img.width <= 0 || img.height <= 0) throw new Error('Image has no dimensions');
+  const data = new Uint8ClampedArray(width * height * 4);
+  for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) {
+    const from = (Math.floor(y * img.height / height) * img.width + Math.floor(x * img.width / width)) * 4;
+    data.set(img.data.subarray(from, from + 4), (y * width + x) * 4);
+  }
+  return { data, width, height };
+}
+export function overlaps(a: Box, b: Box): boolean {
+  return a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+}
+export function flagMatches(flag: AutoFlag, category: string, box: Box): boolean {
+  return KIND_TO_KEY[flag.kind].includes(category) && overlaps(flag.box, box);
+}
+/** Pair deleted/added regions only when their content colour and area agree. */
+function mergeMovedFlags(flags: AutoFlag[], golden: Img, agent: Img, bg: Set<string>): AutoFlag[] {
+  const used = new Set<AutoFlag>();
+  const out: AutoFlag[] = [];
+  for (const missing of flags.filter(f => f.kind === 'missing')) {
+    const g = contentBox(golden, missing.box, bg);
+    const gc = sorted(colourCounts(golden, missing.box)).find(([k]) => !bg.has(k));
+    const extra = flags.find(f => {
+      if (f.kind !== 'extra' || used.has(f)) return false;
+      const a = contentBox(agent, f.box, bg);
+      const ac = sorted(colourCounts(agent, f.box)).find(([k]) => !bg.has(k));
+      return gc && ac && gc[0] === ac[0] && Math.abs(g.n - a.n) <= Math.max(g.n, a.n) * 0.2
+        && Math.abs((g.maxX-g.minX) - (a.maxX-a.minX)) <= CELL
+        && Math.abs((g.maxY-g.minY) - (a.maxY-a.minY)) <= CELL;
+    });
+    if (!extra) continue;
+    used.add(missing); used.add(extra);
+    const x = Math.min(missing.box.x, extra.box.x), y = Math.min(missing.box.y, extra.box.y);
+    out.push({ kind: 'layout', message: 'Element moved: matching content disappeared here and appeared at a new position.',
+      box: { x, y, w: Math.max(missing.box.x+missing.box.w, extra.box.x+extra.box.w)-x,
+        h: Math.max(missing.box.y+missing.box.h, extra.box.y+extra.box.h)-y } });
+  }
+  return [...flags.filter(f => !used.has(f)), ...out];
+}

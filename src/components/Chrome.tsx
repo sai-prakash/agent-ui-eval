@@ -52,8 +52,8 @@ export function PrivacyNote() {
 }
 
 // Measured transfer sizes for model files (text model + vision encoder + tokenizer), audio skipped.
-const SIZE_CPU = 'about 560 MB';
-const SIZE_GPU = 'about 290 MB';
+// TODO orchestrator: measure transfer sizes using a repo script with model access.
+
 
 export type LiveState =
   | { kind: 'idle' }
@@ -70,14 +70,14 @@ export function LivePanel(props: {
   useEffect(() => {
     void detectWebGPU().then(setGpu);
   }, []);
-  const size = gpu ? SIZE_GPU : SIZE_CPU;
+
   const s = props.state;
   return (
     <section className="live" aria-live="polite">
       {s.kind === 'idle' && (
         <>
           <button className="btn primary" onClick={props.onStart} data-testid="run-live">
-            Run the model in your browser ({size}, one-time)
+            Run optional similarity model (downloads model files)
           </button>
           <p className="muted small">
             {gpu === false
