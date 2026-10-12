@@ -26,7 +26,7 @@
     "vite": "^8.3.0",
     "vitest": "^3.2.7"
   },
-  "description": "Browser-based agent UI eval harness \u2014 golden vs agent renders with EmbeddingGemma cosine similarity and lint flags",
+  "description": "Browser-based check of agent-built UI against approved designs: pixel diff, automated region flags, optional embedding similarity",
   "license": "Apache-2.0",
   "author": "Sai Prakash",
   "engines": {

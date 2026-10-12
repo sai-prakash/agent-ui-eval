@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { compareImages, verdict, flagMatches, DIFF_THRESHOLD, type Img } from './visual';
+import { compareImages, verdict, flagMatches, colourLabel, DIFF_THRESHOLD, type Img } from './visual';
 function image(x = 16, color = [255, 0, 0], present = true): Img {
   const width = 128, height = 64;
   const data = new Uint8ClampedArray(width * height * 4);
@@ -30,6 +30,10 @@ describe('pixel checks', () => {
     expect(flagMatches(flag,'token',flag.box)).toBe(true);
     expect(flagMatches(flag,'spacing',flag.box)).toBe(false);
     expect(flagMatches(flag,'token',{ x: 8,y: 0,w: 8,h: 8 })).toBe(false);
+  });
+  it('names known design tokens and keeps the hex', () => {
+    expect(colourLabel('#5b8cff')).toBe('the accent colour (#5b8cff)');
+    expect(colourLabel('#a855f7')).toBe('#a855f7');
   });
   it('honours pixel threshold and any flags', () => {
     const v = compareImages(image(),image());

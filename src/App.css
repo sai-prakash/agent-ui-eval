@@ -33,6 +33,15 @@
 .note { font-size: 13px; color: var(--text-muted); margin-top: 8px; }
 .tag { display: inline-block; font-size: 11px; border: 1px solid var(--border-strong); border-radius: 99px; padding: 1px 8px; color: var(--text-muted); margin-left: 6px; }
 .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pair.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.heatmap { display: block; width: 100%; height: auto; border-radius: 8px; }
+.card .secondary { color: var(--text-muted); font-size: 12px; margin-top: 10px; }
+.card ol, .card ul { margin: 4px 0 8px; padding-left: 22px; }
+.upload { padding: 14px; }
+.field { display: flex; flex-direction: column; gap: 4px; font-size: 13px; flex: 1; min-width: 220px; }
+.field span { font-weight: 600; }
+.card .notice { border-left: 3px solid var(--accent); padding: 4px 10px; margin: 6px 0; }
 .pass { color: var(--success); font-weight: 600; } .fail { color: var(--danger); font-weight: 600; }
 footer { margin-top: 40px; font-size: 12px; color: var(--text-dim); }
 @media (max-width: 600px) { .result { grid-template-columns: 80px 1fr; } .result img { width: 80px; } }
+@media (max-width: 720px) { .pair.three { grid-template-columns: 1fr; } }

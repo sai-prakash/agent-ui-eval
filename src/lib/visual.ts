@@ -21,6 +21,13 @@ const MIN_REGION_PX = 25;
 const hex = (r: number, g: number, b: number) =>
   '#' + [r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('');
 
+/** Design tokens from src/index.css, so messages can name a colour instead of only showing hex. */
+export const TOKEN_NAMES: Record<string, string> = { '#5b8cff': 'accent', '#e5484d': 'danger', '#3dd68c': 'success' };
+export function colourLabel(k: string) {
+  const name = TOKEN_NAMES[k];
+  return name ? `the ${name} colour (${k})` : k;
+}
+
 function colourCounts(img: Img, box?: Box): Map<string, number> {
   const m = new Map<string, number>();
   const x0 = box?.x ?? 0, y0 = box?.y ?? 0;
@@ -115,14 +122,14 @@ export function compareImages(golden: Img, agent: Img): VisualReport {
     const gC = colourCounts(golden, box), aC = colourCounts(agent, box);
     for (const [k, n] of sorted(aC)) {
       if (n < 40 || bg.has(k) || palette.has(k)) continue;
-      flags.push({ kind: 'colour', box, message: `Off-palette colour: ${k} (${n} px) is not used anywhere in the approved design.` });
+      flags.push({ kind: 'colour', box, message: `Off-palette colour: ${colourLabel(k)} (${n} px) is not used anywhere in the approved design.` });
       break;
     }
     for (const [k, n] of sorted(gC)) {
       if (n < 300 || bg.has(k)) continue;
       // Gone, and not simply recoloured: total content in the region shrank by about that area.
       if ((aC.get(k) ?? 0) < n * 0.2 && a.n < g.n - n * 0.5) {
-        flags.push({ kind: 'missing', box, message: `Element missing: a ${k} area (${n} px) in the approved design is gone in the agent version.` });
+        flags.push({ kind: 'missing', box, message: `Element missing: a ${n} px area in ${colourLabel(k)} from the approved design is gone in the agent version.` });
         break;
       }
     }
@@ -135,9 +142,9 @@ export function compareImages(golden: Img, agent: Img): VisualReport {
     const aTop = sorted(colourCounts(agent, box)).find(([k]) => !bg.has(k));
     if (gTop && aTop && gTop[0] !== aTop[0] && !flags.some((f) => f.box === box && f.kind === 'colour')) {
       if (!palette.has(aTop[0]))
-        flags.push({ kind: 'colour', box, message: `Off-palette colour: ${aTop[0]} where the approved design uses ${gTop[0]}.` });
+        flags.push({ kind: 'colour', box, message: `Off-palette colour: ${colourLabel(aTop[0])} where the approved design uses ${colourLabel(gTop[0])}.` });
       else
-        flags.push({ kind: 'state', box, message: `Looks like a different state: ${gTop[0]} became ${aTop[0]}, a colour used elsewhere in the approved design.` });
+        flags.push({ kind: 'state', box, message: `Looks like a different state: ${colourLabel(gTop[0])} became ${colourLabel(aTop[0])}, a colour used elsewhere in the approved design.` });
     }
   }
   return { width: w, height: h, diffPixels, diffPct: diffPixels / (w * h), diff, flags: mergeMovedFlags(flags, golden, agent, bg), resizeNote };
