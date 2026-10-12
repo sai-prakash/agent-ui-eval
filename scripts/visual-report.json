@@ -1,0 +1,192 @@
+[
+ {
+  "id": "button-primary",
+  "sim": 0.9771,
+  "diffPct": 5.45,
+  "pass": false,
+  "flags": [
+   "Off-palette colour: #a855f7 (7280 px) is not used anywhere in the approved design."
+  ],
+  "answerKey": [
+   "token"
+  ],
+  "keyed": [
+   {
+    "defect": "token",
+    "caught": true
+   }
+  ]
+ },
+ {
+  "id": "button-disabled",
+  "sim": 0.9969,
+  "diffPct": 4.26,
+  "pass": false,
+  "flags": [
+   "Looks like a different state: #1f2532 became #5b8cff, a colour used elsewhere in the approved design."
+  ],
+  "answerKey": [
+   "missing_state"
+  ],
+  "keyed": [
+   {
+    "defect": "missing_state",
+    "caught": true
+   }
+  ]
+ },
+ {
+  "id": "input-text",
+  "sim": 0.9976,
+  "diffPct": 0.5,
+  "pass": false,
+  "flags": [
+   "Position or size changed: edges moved by up to 24px."
+  ],
+  "answerKey": [
+   "spacing"
+  ],
+  "keyed": [
+   {
+    "defect": "spacing",
+    "caught": true
+   }
+  ]
+ },
+ {
+  "id": "toggle-switch",
+  "sim": 0.9842,
+  "diffPct": 0.76,
+  "pass": false,
+  "flags": [
+   "Off-palette colour: #22c55e (1016 px) is not used anywhere in the approved design."
+  ],
+  "answerKey": [
+   "token"
+  ],
+  "keyed": [
+   {
+    "defect": "token",
+    "caught": true
+   }
+  ]
+ },
+ {
+  "id": "card-stats",
+  "sim": 0.9972,
+  "diffPct": 2.11,
+  "pass": false,
+  "flags": [
+   "Position or size changed: edges moved by up to 26px.",
+   "Element missing: approved design has content here (1400 px), agent version is mostly empty.",
+   "Extra element: agent added content the approved design does not have."
+  ],
+  "answerKey": [
+   "spacing"
+  ],
+  "keyed": [
+   {
+    "defect": "spacing",
+    "caught": true
+   }
+  ]
+ },
+ {
+  "id": "modal-confirm",
+  "sim": 0.9859,
+  "diffPct": 5.14,
+  "pass": false,
+  "flags": [
+   "Off-palette colour: #f97316 (3192 px) is not used anywhere in the approved design.",
+   "Position or size changed: edges moved by up to 40px."
+  ],
+  "answerKey": [
+   "spacing",
+   "token"
+  ],
+  "keyed": [
+   {
+    "defect": "spacing",
+    "caught": true
+   },
+   {
+    "defect": "token",
+    "caught": true
+   }
+  ]
+ },
+ {
+  "id": "badge-status",
+  "sim": 0.9806,
+  "diffPct": 0.25,
+  "pass": false,
+  "flags": [
+   "Off-palette colour: #1c253b (1190 px) is not used anywhere in the approved design.",
+   "Off-palette colour: #1c253b (1362 px) is not used anywhere in the approved design.",
+   "Off-palette colour: #1c253b (969 px) is not used anywhere in the approved design."
+  ],
+  "answerKey": [
+   "token"
+  ],
+  "keyed": [
+   {
+    "defect": "token",
+    "caught": true
+   }
+  ]
+ },
+ {
+  "id": "tabs-underline",
+  "sim": 0.9977,
+  "diffPct": 0.98,
+  "pass": false,
+  "flags": [
+   "Looks like a different state: #5b8cff became #181c26, a colour used elsewhere in the approved design.",
+   "Position or size changed: edges moved by up to 10px.",
+   "Position or size changed: edges moved by up to 30px.",
+   "Extra element: agent added content the approved design does not have."
+  ],
+  "answerKey": [
+   "spacing"
+  ],
+  "keyed": [
+   {
+    "defect": "spacing",
+    "caught": true
+   }
+  ]
+ },
+ {
+  "id": "empty-state",
+  "sim": 0.9888,
+  "diffPct": 3.32,
+  "pass": false,
+  "flags": [
+   "Element missing: a #5b8cff area (3452 px) in the approved design is gone in the agent version.",
+   "Position or size changed: edges moved by up to 19px."
+  ],
+  "answerKey": [
+   "missing_state",
+   "spacing"
+  ],
+  "keyed": [
+   {
+    "defect": "missing_state",
+    "caught": true
+   },
+   {
+    "defect": "spacing",
+    "caught": true
+   }
+  ]
+ },
+ {
+  "id": "progress-bar",
+  "sim": 1,
+  "diffPct": 0,
+  "pass": true,
+  "flags": [],
+  "answerKey": [],
+  "keyed": []
+ }
+]

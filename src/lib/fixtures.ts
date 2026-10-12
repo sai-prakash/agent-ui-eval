@@ -7,7 +7,7 @@ export type FixtureCase = {
   description: string;
   goldenSrc: string;
   agentSrc: string;
-  /** Intentional agent defects used by the lint checker. */
+  /** Defects the author planted on purpose. Answer key only: the verdict never reads this. */
   defects: LintKind[];
   defectNotes: string[];
 };

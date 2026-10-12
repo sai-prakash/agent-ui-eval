@@ -21,7 +21,7 @@ React · TypeScript · Vite · Transformers.js · WebGPU · EmbeddingGemma 2
 | **Model id** | [`onnx-community/embeddinggemma-2-ONNX`](https://huggingface.co/onnx-community/embeddinggemma-2-ONNX) |
 | **Task** | Multimodal feature extraction (image embeddings for golden vs agent) |
 | **Preferred device** | `webgpu` + `dtype: "q4f16"` |
-| **Fallback** | `wasm` + `dtype: "q8"` |
+| **Fallback** | `wasm` + `dtype: "q8"` on the plain CPU ONNX Runtime binary (`public/ort/`) |
 | **Encoders loaded** | Text + vision (audio encoder disabled to shrink download) |
 
 ## Scoring
@@ -97,3 +97,15 @@ Sample SVG fixtures in `/public/fixtures/` are original to this repo.
 
 - The page opens with real, precomputed example results (`src/data/examples.json`, plus library embeddings in `public/` where used). They were produced by running the same model (q8) in Node with `scripts/precompute.mjs`; rerun it after changing samples: `npm i --no-save sharp && node scripts/precompute.mjs`.
 - The live model is opt-in. The app checks for a real WebGPU adapter first. Without one it goes straight to WASM + q8 and points ONNX Runtime at the plain CPU WASM binary in `public/ort/`, because the WebGPU build bundled with Transformers.js has no CPU kernel for `GatherBlockQuantized`, which every quantized EmbeddingGemma 2 file uses.
+
+## Automated checks (verdict no longer uses author notes)
+
+The pass/fail verdict now comes only from signals computed from the images:
+
+1. **Pixel diff** (`pixelmatch`, threshold 0.1, anti-aliasing ignored) on same-size renders; pass at ≤ 0.2% changed pixels. The UI shows the diff heatmap with flagged areas boxed.
+2. **Region checks** (`src/lib/visual.ts`) on each changed area: off-palette colours (not used anywhere in the approved render), colour swaps to another approved colour ("different state"), elements that moved or resized (edge shift ≥ 3px), and elements that disappeared or were added.
+3. **Embedding similarity** (EmbeddingGemma 2), pass at ≥ 0.92.
+
+The defects the author planted in each fixture are kept as a labelled **answer key** to grade the checks. On the 10 sample pairs the checks catch 11 of 11 planted defects and pass the control pair; the thresholds were tuned on these same samples, so this is a sanity check, not a benchmark. No contrast check yet. Reproduce in Node: `npm i --no-save sharp && npx tsx scripts/visual-report.ts`.
+
+Model code is lazy-loaded: the pixel checks run on page load with no download; Transformers.js loads only when you click "Run the model".
